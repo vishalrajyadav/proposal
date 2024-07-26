@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposal Page</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Zeyada&display=swap');
+
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            background-image: url("https://www.psdgraphics.com/wp-content/uploads/2022/01/white-math-paper-texture.jpg");
+            background-position: center center;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .paper {
+            background-image: url("https://i0.wp.com/textures.world/wp-content/uploads/2018/10/2-Millimeter-Paper-Background-copy.jpg?ssl=1");
+            background-size: cover;
+            background-position: center center;
+            padding: 20px 50px;
+            transform: rotateZ(-5deg);
+            box-shadow: 1px 15px 20px 0px rgba(0,0,0,0.5);
+            position: absolute;
+            max-width: 90%;
+        }
+
+        .paper.heart {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            padding: 0;
+            border-radius: 50%;
+        }
+
+        .paper.image {
+            padding: 10px;
+        }
+
+        .paper.image p {
+            font-size: 24px;
+        }
+
+        img {
+            max-height: 150px;
+            width: 100%;
+            user-select: none;
+        }
+
+        .paper.heart::after {
+            content: "";
+            background-image: url('https://cdn.pixabay.com/photo/2016/03/31/19/25/cartoon-1294994__340.png');
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-size: 120px;
+            background-position: center center;
+            background-repeat: no-repeat;
+            opacity: 0.6;
+        }
+
+        p {
+            font-family: 'Zeyada';
+            font-size: 36px;
+            color: rgb(0,0,100);
+            opacity: 0.75;
+            user-select: none;
+            filter: drop-shadow(2px 1.5px 1px rgba(0,0,105,0.9));
+        }
+
+        @media (max-width: 768px) {
+            .paper {
+                padding: 15px 30px;
+            }
+
+            .paper.image p {
+                font-size: 20px;
+            }
+
+            img {
+                max-height: 120px;
+            }
+
+            p {
+                font-size: 28px;
+            }
+
+            .paper.heart {
+                width: 120px;
+                height: 120px;
+            }
+
+            .paper.heart::after {
+                background-size: 100px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .paper {
+                padding: 10px 20px;
+            }
+
+            .paper.image p {
+                font-size: 18px;
+            }
+
+            img {
+                max-height: 100px;
+            }
+
+            p {
+                font-size: 24px;
+            }
+
+            .paper.heart {
+                width: 100px;
+                height: 100px;
+            }
+
+            .paper.heart::after {
+                background-size: 80px;
+            }
+        }
+
+        .play-button {
+            position: absolute;
+            bottom: 20px;
+            background: #ff0;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-bottom: 80px;
+        }
+    </style>
+</head>
+<body>
+    <!-- A pen by Developer Rahul  -->
+    <div class="paper">
+        <p class="p1">For me are my one & only one...?!</p>
+    </div>
+
+    <div class="paper heart"></div>
+
+    <div class="paper image">
+        <p>your cute smile like baby</p>
+        <p>& you'r pure soul 😍</p>
+        <img src="one.jpg" />
+    </div>
+
+    <div class="paper image">
+        <p>i'm falling </p>
+        <p>whenever i see ur eyes  👀</p>
+        <img src="two.jpg" />
+    </div>
+
+    <div class="paper image">
+        <p>i am enjoying</p>
+        <p>spending time with u🥰</p>
+        <img src="three.jpg" />
+    </div>
+
+    <div class="paper image">
+        <p>You are special</p>
+        <p>and kind hearted ❤️</p>
+        <img src="four.jpg" />
+    </div>
+
+    <div class="paper red">
+        <p class="p1">Your presence is a gift</p>
+        <p class="p2"> You make everything better😍</p>
+    </div>
+
+    <div class="paper">
+        <p class="p1">A message from my side </p>
+        <p class="p1">for u Sriss -- Raosahab<span style="color: red !important;">❤️</span></p>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="background-music" src="song.mp3" loop></audio>
+
+    <!-- Play Button -->
+    <button class="play-button" onclick="playMusic()">Play Music</button>
+
+    <script>
+        let highestZ = 1;
+
+        class Paper {
+            constructor(paper) {
+                this.paper = paper;
+                this.holdingPaper = false;
+                this.mouseTouchX = 0;
+                this.mouseTouchY = 0;
+                this.mouseX = 0;
+                this.mouseY = 0;
+                this.prevMouseX = 0;
+                this.prevMouseY = 0;
+                this.velX = 0;
+                this.velY = 0;
+                this.rotation = Math.random() * 30 - 15;
+                this.currentPaperX = 0;
+                this.currentPaperY = 0;
+                this.rotating = false;
+
+                this.init();
+            }
+
+            init() {
+                document.addEventListener('mousemove', this.onMouseMove.bind(this));
+                document.addEventListener('touchmove', this.onTouchMove.bind(this), { passive: false });
+
+                this.paper.addEventListener('mousedown', this.onMouseDown.bind(this));
+                this.paper.addEventListener('touchstart', this.onTouchStart.bind(this), { passive: false });
+
+                window.addEventListener('mouseup', this.onMouseUp.bind(this));
+                window.addEventListener('touchend', this.onTouchEnd.bind(this));
+            }
+
+            onMouseMove(e) {
+                if (!this.rotating) {
+                    this.mouseX = e.clientX;
+                    this.mouseY = e.clientY;
+
+                    this.velX = this.mouseX - this.prevMouseX;
+                    this.velY = this.mouseY - this.prevMouseY;
+                }
+
+                const dirX = this.mouseX - this.mouseTouchX;
+                const dirY = this.mouseY - this.mouseTouchY;
+                const dirLength = Math.sqrt(dirX * dirX + dirY * dirY);
+                const dirNormalizedX = dirX / dirLength;
+                const dirNormalizedY = dirY / dirLength;
+
+                const angle = Math.atan2(dirNormalizedY, dirNormalizedX);
+                let degrees = 180 * angle / Math.PI;
+                degrees = (360 + Math.round(degrees)) % 360;
+                if (this.rotating) {
+                    this.rotation = degrees;
+                }
+
+                if (this.holdingPaper) {
+                    if (!this.rotating) {
+                        this.currentPaperX += this.velX;
+                        this.currentPaperY += this.velY;
+                    }
+                    this.prevMouseX = this.mouseX;
+                    this.prevMouseY = this.mouseY;
+
+                    this.paper.style.transform = `translateX(${this.currentPaperX}px) translateY(${this.currentPaperY}px) rotateZ(${this.rotation}deg)`;
+                }
+            }
+
+            onTouchMove(e) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                this.onMouseMove({ clientX: touch.clientX, clientY: touch.clientY });
+            }
+
+            onMouseDown(e) {
+                if (this.holdingPaper) return;
+                this.holdingPaper = true;
+
+                this.paper.style.zIndex = highestZ;
+                highestZ += 1;
+
+                this.mouseTouchX = e.clientX || e.touches[0].clientX;
+                this.mouseTouchY = e.clientY || e.touches[0].clientY;
+                this.prevMouseX = this.mouseTouchX;
+                this.prevMouseY = this.mouseTouchY;
+
+                if (e.button === 2) {
+                    this.rotating = true;
+                }
+            }
+
+            onTouchStart(e) {
+                const touch = e.touches[0];
+                this.onMouseDown({ button: 0, clientX: touch.clientX, clientY: touch.clientY });
+            }
+
+            onMouseUp() {
+                this.holdingPaper = false;
+                this.rotating = false;
+            }
+
+            onTouchEnd() {
+                this.onMouseUp();
+            }
+        }
+
+        const papers = Array.from(document.querySelectorAll('.paper'));
+
+        papers.forEach(paper => {
+            new Paper(paper);
+        });
+
+        function playMusic() {
+            const audio = document.getElementById('background-music');
+            audio.volume = 0.9; // Adjust volume if needed
+            audio.play();
+        }
+    </script>
+</body>
+</html>
